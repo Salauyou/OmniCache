@@ -89,7 +89,7 @@ public final class OmniStorage {
 		
 		Bundle b = new Bundle(type, id, schema.get(type));
 		adapters.get(type).toBundle(e, b);
-		storage.get(type).put(id, new Tuple(b));
+		storage.get(type).put(id, Tuple.fromBundle(b));
 		return this;
 	}
 	

@@ -7,10 +7,18 @@ final class Tuple {
 	
 	final protected Object[] elements;
 
-	protected Tuple(Bundle b) {
+	
+	// instantiation inside the class only
+	private Tuple(SchemaType st) {
+		elements = new Object[st.elements.size()];
+	}
+	
+	
+	
+	static protected Tuple fromBundle(Bundle b) {
 		
 		SchemaType st = b.schemaType;
-		elements = new Object[st.elements.size()];
+		Tuple t = new Tuple(st);
 		Object[] m = b.elements;
 		
 		for (SchemaElement se : st.elements) {
@@ -26,7 +34,7 @@ final class Tuple {
 						throw new IllegalArgumentException(String.format(
 								"Element {%s}.%s must be of class %s", st.type, se.name, se.clazz.getSimpleName()
 								));
-					elements[se.index] = v;
+					t.elements[se.index] = v;
 					break;
 	
 				case ENTITY:
@@ -40,7 +48,7 @@ final class Tuple {
 								"Element {%s}.%s must be of type {%s}, not {%s}", st.type, se.name, se.type, e.getType()
 								));
 					OmniStorage.validateId(e.getId());
-					elements[se.index] = e.getId();
+					t.elements[se.index] = e.getId();
 					break;
 						
 				case LIST:
@@ -48,6 +56,8 @@ final class Tuple {
 				}
 			}
 		}
+		
+		return t;
 	}
 	
 	
