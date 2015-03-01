@@ -24,10 +24,6 @@ public final class Schema {
 	private Schema(){};
 	
 	
-	
-	
-	
-	
 	static final protected class SchemaType {
 		
 		protected final Map<String, SchemaElement> elementMap;
@@ -36,8 +32,8 @@ public final class Schema {
 		
 		protected SchemaType(String type, List<SchemaElement> elements) {
 			this.type = type;
-			this.elements = Collections.unmodifiableList(new ArrayList<SchemaElement>(elements));
-			Map<String, SchemaElement> m = new HashMap<String, SchemaElement>();
+			this.elements = Collections.unmodifiableList(new ArrayList<>(elements));
+			Map<String, SchemaElement> m = new HashMap<>();
 			for (SchemaElement e : elements) {
 				m.put(e.name, e);
 			}

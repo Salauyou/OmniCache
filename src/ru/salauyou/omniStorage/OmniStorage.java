@@ -109,7 +109,7 @@ public final class OmniStorage {
 		
 		Entity e = adapters.get(type).create(type, id);
 		validateNewEntity(e, type, id);
-		Map<EntityKey, Entity> c = new HashMap<EntityKey, Entity>();
+		Map<EntityKey, Entity> c = new HashMap<>();
 		c.put(new EntityKey(type, id), e);
 		resolve(type, e, c);
 		return e;
@@ -152,7 +152,7 @@ public final class OmniStorage {
 				break;
 					
 			case LIST:
-				throw new UnsupportedOperationException("List in entities aren't supported yet");
+				throw new UnsupportedOperationException("Lists in entities aren't supported yet");
 			}
 		}
 		adapters.get(type).fromBundle(e, b);

@@ -13,14 +13,15 @@ import ru.salauyou.omniStorage.Schema.*;
 
 public class Builder {
 	
-	private List<SchemaType> schema = new ArrayList<SchemaType>();
-	private Set<String> schemaTypes = new HashSet<String>();
-	private List<SchemaElement> currentTypeList = new ArrayList<SchemaElement>();
-	private Set<String> currentNames = new HashSet<String>();
+	private List<SchemaType> schema = new ArrayList<>();
+	private Set<String> schemaTypes = new HashSet<>();
+	private List<SchemaElement> currentTypeList = new ArrayList<>();
+	private Set<String> currentNames = new HashSet<>();
 	private String currentType = null;
 	private EntityAdapter currentAdapter = null;
 	private Map<String, EntityAdapter> adapters = new HashMap<>();
 	private int currentIndex = 0;
+	
 	
 	// no instatiation outside the package
 	protected Builder(){};
@@ -55,28 +56,28 @@ public class Builder {
 	
 	
 	public Builder addScalar(String name, Class<?> clazz) 
-							throws IllegalStateException, IllegalArgumentException {
+							 throws IllegalStateException, IllegalArgumentException {
 		addElement(ElementKind.SCALAR, name, clazz, null, Nullable.YES);
 		return this;
 	}
 	
 	
 	public Builder addScalar(String name, Class<?> clazz, Nullable nullable) 
-							throws IllegalStateException, IllegalArgumentException{
+							 throws IllegalStateException, IllegalArgumentException{
 		addElement(ElementKind.SCALAR, name, clazz, null, nullable);
 		return this;
 	}
 	
 	
 	public Builder addEntity(String name, String type) 
-							throws IllegalStateException, IllegalArgumentException{
+							 throws IllegalStateException, IllegalArgumentException{
 		addElement(ElementKind.ENTITY, name, null, type, Nullable.YES);
 		return this;
 	}
 	
 	
 	public Builder addEntity(String name, String type, Nullable nullable) 
-							throws IllegalStateException, IllegalArgumentException{
+							 throws IllegalStateException, IllegalArgumentException{
 		addElement(ElementKind.ENTITY, name, null, type, nullable);
 		return this;
 	}
