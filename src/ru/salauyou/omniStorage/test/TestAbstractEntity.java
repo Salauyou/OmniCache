@@ -1,6 +1,6 @@
 package ru.salauyou.omniStorage.test;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.*;
 
 import org.junit.Test;
 
@@ -67,19 +67,19 @@ public class TestAbstractEntity {
 	public void testToString() {
 		EntityOne e1 = new EntityOne();
 		e1.setId("one");
-		assertEquals(e1.toString().equals("@Entity{One}[one]"), true);
+		assertTrue(e1.toString().equals("@Entity{One}[one]"));
 		
 		e1 = new EntityOne();
-		assertEquals(e1.toString().equals("@Entity{One}[null]"), true);
+		assertTrue(e1.toString().equals("@Entity{One}[null]"));
 		
 		EntityTwo e2 = new EntityTwo("two");
-		assertEquals(e2.toString().equals("@Entity{Two}[two]"), true);
+		assertTrue(e2.toString().equals("@Entity{Two}[two]"));
 		
 		e2 = new EntityTwo(null);
-		assertEquals(e2.toString().equals("@Entity{Two}[null]"), true);
+		assertTrue(e2.toString().equals("@Entity{Two}[null]"));
 		
 		Entity2 eTwo = new Entity2("twenty-two");
-		assertEquals(eTwo.toString().equals("@Entity{Two}[twenty-two]"), true);
+		assertTrue(eTwo.toString().equals("@Entity{Two}[twenty-two]"));
 	}
 	
 	
@@ -90,46 +90,46 @@ public class TestAbstractEntity {
 		EntityOne e1 = new EntityOne();
 		e1.setId("one");
 		EntityTwo e2 = new EntityTwo("two");
-		assertEquals(e1.equals(e2), false);
-		assertEquals(e2.equals(e1), false);
+		assertFalse(e1.equals(e2));
+		assertFalse(e2.equals(e1));
 		
 		EntityTwo two = new EntityTwo("two");
-		assertEquals(e2.equals(two), true);
-		assertEquals(two.equals(e2), true);
-		assertEquals(two.hashCode() == e2.hashCode(), true);
+		assertTrue(e2.equals(two));
+		assertTrue(two.equals(e2));
+		assertTrue(two.hashCode() == e2.hashCode());
 		
 		EntityOne one = new EntityOne();
 		one.setId("one");
-		assertEquals(e1.equals(one), true);
-		assertEquals(one.equals(e1), true);
-		assertEquals(e1.hashCode() == one.hashCode(), true);
+		assertTrue(e1.equals(one));
+		assertTrue(one.equals(e1));
+		assertTrue(e1.hashCode() == one.hashCode());
 		
 		two = new EntityTwo("twenty-two");
-		assertEquals(e2.equals(two), false);
-		assertEquals(two.equals(e2), false);
+		assertFalse(e2.equals(two));
+		assertFalse(two.equals(e2));
 		
 		e2 = new EntityTwo(null);
 		two = new EntityTwo(null);
-		assertEquals(e2.equals(two), false);
-		assertEquals(two.equals(e2), false);
+		assertFalse(e2.equals(two));
+		assertFalse(two.equals(e2));
 		
 		e1.setId("two");
 		e2 = new EntityTwo("two");
-		assertEquals(e1.equals(e2), false);
-		assertEquals(e2.equals(e1), false);
+		assertFalse(e1.equals(e2));
+		assertFalse(e2.equals(e1));
 		
-		assertEquals(e2.equals("two"), false);
-		assertEquals("two".equals(e2), false);
-		assertEquals(e2.equals(e2), true);
-		assertEquals(e2.equals(null), false);
+		assertFalse(e2.equals("two"));
+		assertFalse("two".equals(e2));
+		assertTrue(e2.equals(e2));
+		assertFalse(e2.equals(null));
 		
 		Entity2 eTwo = new Entity2("two");
-		assertEquals(e2.equals(eTwo), true);
-		assertEquals(eTwo.equals(e2), true);
+		assertTrue(e2.equals(eTwo));
+		assertTrue(eTwo.equals(e2));
 		
 		eTwo.setId("twenty-two");
-		assertEquals(e2.equals(eTwo), false);
-		assertEquals(eTwo.equals(e2), false);
+		assertFalse(e2.equals(eTwo));
+		assertFalse(eTwo.equals(e2));
 	}
 	
 	
