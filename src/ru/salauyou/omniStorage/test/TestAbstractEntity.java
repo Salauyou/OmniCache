@@ -38,7 +38,7 @@ public class TestAbstractEntity {
 		
 	}
 	
-	// same returned type but different class
+	// same as EntityTwo returned type but different class
 	static class Entity2 extends AbstractEntity {
 
 		@Override
@@ -67,19 +67,19 @@ public class TestAbstractEntity {
 	public void testToString() {
 		EntityOne e1 = new EntityOne();
 		e1.setId("one");
-		assertTrue(e1.toString().equals("@Entity{One}[one]"));
+		assertEquals("@Entity{One}[one]", e1.toString());
 		
 		e1 = new EntityOne();
-		assertTrue(e1.toString().equals("@Entity{One}[null]"));
+		assertEquals("@Entity{One}[null]", e1.toString());
 		
 		EntityTwo e2 = new EntityTwo("two");
-		assertTrue(e2.toString().equals("@Entity{Two}[two]"));
+		assertEquals("@Entity{Two}[two]", e2.toString());
 		
 		e2 = new EntityTwo(null);
-		assertTrue(e2.toString().equals("@Entity{Two}[null]"));
+		assertEquals("@Entity{Two}[null]", e2.toString());
 		
 		Entity2 eTwo = new Entity2("twenty-two");
-		assertTrue(eTwo.toString().equals("@Entity{Two}[twenty-two]"));
+		assertEquals("@Entity{Two}[twenty-two]", eTwo.toString());
 	}
 	
 	
@@ -90,46 +90,47 @@ public class TestAbstractEntity {
 		EntityOne e1 = new EntityOne();
 		e1.setId("one");
 		EntityTwo e2 = new EntityTwo("two");
-		assertFalse(e1.equals(e2));
-		assertFalse(e2.equals(e1));
+		assertNotEquals(e1, e2);
+		assertNotEquals(e2, e1);
 		
 		EntityTwo two = new EntityTwo("two");
-		assertTrue(e2.equals(two));
-		assertTrue(two.equals(e2));
+		assertEquals(e2, two);
+		assertEquals(two, e2);
 		assertTrue(two.hashCode() == e2.hashCode());
 		
 		EntityOne one = new EntityOne();
 		one.setId("one");
-		assertTrue(e1.equals(one));
-		assertTrue(one.equals(e1));
+		assertEquals(e1, one);
+		assertEquals(one, e1);
 		assertTrue(e1.hashCode() == one.hashCode());
 		
 		two = new EntityTwo("twenty-two");
-		assertFalse(e2.equals(two));
-		assertFalse(two.equals(e2));
+		assertNotEquals(e2, two);
+		assertNotEquals(two, e2);
 		
 		e2 = new EntityTwo(null);
 		two = new EntityTwo(null);
-		assertFalse(e2.equals(two));
-		assertFalse(two.equals(e2));
+		assertNotEquals(e2, two);
+		assertNotEquals(two, e2);
+		assertNull(e2.getId());
 		
 		e1.setId("two");
 		e2 = new EntityTwo("two");
-		assertFalse(e1.equals(e2));
-		assertFalse(e2.equals(e1));
+		assertNotEquals(e1, e2);
+		assertNotEquals(e2, e1);
 		
-		assertFalse(e2.equals("two"));
-		assertFalse("two".equals(e2));
-		assertTrue(e2.equals(e2));
-		assertFalse(e2.equals(null));
+		assertNotEquals("two", e2);
+		assertNotEquals(e2, "two");
+		assertEquals(e2, e2);
+		assertNotEquals(e2, null);
 		
 		Entity2 eTwo = new Entity2("two");
-		assertTrue(e2.equals(eTwo));
-		assertTrue(eTwo.equals(e2));
+		assertEquals(e2, eTwo);
+		assertEquals(eTwo, e2);
 		
 		eTwo.setId("twenty-two");
-		assertFalse(e2.equals(eTwo));
-		assertFalse(eTwo.equals(e2));
+		assertNotEquals(e2, eTwo);
+		assertNotEquals(eTwo, e2);
 	}
 	
 	
@@ -140,12 +141,12 @@ public class TestAbstractEntity {
 		e1.setId("one");
 		EntityTwo e2 = new EntityTwo("two");
 		Entity2 eTwo = new Entity2("twenty-two");
-		assertEquals(e1.getType(), "One");
-		assertEquals(e1.getId(), "one");
-		assertEquals(e2.getType(), "Two");
-		assertEquals(e2.getId(), "two");
-		assertEquals(eTwo.getType(), "Two");
-		assertEquals(eTwo.getId(), "twenty-two");
+		assertEquals("One", e1.getType());
+		assertEquals("one", e1.getId());
+		assertEquals("Two", e2.getType());
+		assertEquals("two", e2.getId());
+		assertEquals("Two", eTwo.getType());
+		assertEquals("twenty-two", eTwo.getId());
 	}
 	
 
