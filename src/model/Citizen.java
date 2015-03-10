@@ -165,7 +165,5 @@ public class Citizen implements Entity {
 		return this.father;
 	}
 	
-	
-
 
 }
