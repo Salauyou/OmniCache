@@ -21,7 +21,7 @@ public class Builder {
 	private EntityAdapter currentAdapter = null;
 	private Map<String, EntityAdapter> adapters = new HashMap<>();
 	private int currentIndex = 0;
-	
+	private boolean isBuilt = false;
 	
 	// no instatiation outside the package
 	protected Builder(){};
@@ -32,7 +32,7 @@ public class Builder {
 			if (currentTypeList.size() == 0)
 				throw new IllegalStateException("Type must contain at least one element");
 			if (currentAdapter == null)
-				throw new IllegalStateException("Must define Entity Adapter to add type to schema");
+				throw new IllegalStateException("Must define Entity adapter to add type to schema");
 			
 			schema.add(new SchemaType(currentType, currentTypeList));
 			adapters.put(currentType, currentAdapter);
@@ -41,7 +41,7 @@ public class Builder {
 			currentAdapter = null;
 			currentIndex = 0;
 		}
-		if (type == null || type.equals(""))
+		if (type == null || type.isEmpty())
 			throw new IllegalArgumentException("Type cannot be null neither empty");
 		if (schemaTypes.contains(type))
 			throw new IllegalArgumentException(String.format("Entity{%s} is already defined in schema", type));
@@ -51,7 +51,7 @@ public class Builder {
 		currentNames.clear();
 		currentIndex = 0;
 		return this;
-	};
+	}
 	
 	
 	
@@ -63,7 +63,7 @@ public class Builder {
 	
 	
 	public Builder addScalar(String name, Class<?> clazz, Nullable nullable) 
-							 throws IllegalStateException, IllegalArgumentException{
+						 throws IllegalStateException, IllegalArgumentException{
 		addElement(ElementKind.SCALAR, name, clazz, null, nullable);
 		return this;
 	}
@@ -89,21 +89,21 @@ public class Builder {
 		
 		if (currentType == null)
 			throw new IllegalStateException("Entity type must be defined first");
-		if (name == null || name.equals("")) 
+		if (name == null || name.isEmpty()) 
 			throw new IllegalArgumentException("Element name cannot be null or empty");
 		if (currentNames.contains(name))
-			throw new IllegalArgumentException(String.format("Element {%s}.%s is aleready defined", currentType, name));
+			throw new IllegalArgumentException(String.format("Element {%s}.%s is already defined", currentType, name));
 		
 		switch (kind) {
 		case SCALAR:
-			if (Entity.class.isAssignableFrom(clazz))
-				throw new IllegalArgumentException(String.format("Class %s is an Entity class", clazz.getSimpleName()));
 			if (clazz == null)
 				throw new IllegalArgumentException("Element class cannot be null");
+			if (Entity.class.isAssignableFrom(clazz))
+				throw new IllegalArgumentException(String.format("Class %s is an Entity class", clazz.getSimpleName()));
 			break;
 		
 		case ENTITY:
-			if (type == null || type.equals(""))
+			if (type == null || type.isEmpty())
 				throw new IllegalArgumentException("Element type for an Entity type must be defined");
 			break;
 		
@@ -127,6 +127,8 @@ public class Builder {
 	
 	
 	public OmniStorage build() throws IllegalStateException, IllegalArgumentException {
+		if (isBuilt) 
+			throw new IllegalStateException("Already built");
 		if (currentType != null) {
 			if (currentTypeList.size() == 0)
 				throw new IllegalStateException("Type must contain at least one element");
@@ -135,6 +137,7 @@ public class Builder {
 			schema.add(new SchemaType(currentType, currentTypeList));
 			adapters.put(currentType, currentAdapter);
 		}
+		isBuilt = true;
 		return new OmniStorage(schema, adapters);
 	}
 }

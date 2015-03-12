@@ -206,4 +206,9 @@ public final class OmniStorage {
 		return new Builder();
 	}
 	
+	
+	public List<SchemaType> getSchema() {
+		return schemaTypes;
+	}
+	
 }

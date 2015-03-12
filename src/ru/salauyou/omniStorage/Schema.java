@@ -24,7 +24,7 @@ public final class Schema {
 	private Schema(){};
 	
 	
-	static final protected class SchemaType {
+	public static final class SchemaType {
 		
 		protected final Map<String, SchemaElement> elementMap;
 		protected final List<SchemaElement> elements;
@@ -42,7 +42,7 @@ public final class Schema {
 		
 		
 		public List<SchemaElement> getElements() {
-			return this.elements;
+			return elements;
 		}
 		
 

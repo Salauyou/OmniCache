@@ -5,13 +5,13 @@ import ru.salauyou.omniStorage.Schema.Nullable;
 
 public class SchemaElement {
 
-	protected final String name;
-	protected final Class<?> clazz;
-	protected final String column;
-	protected final Nullable nullable;
-	protected final ElementKind kind;
-	protected final String type;
-	protected final int index;
+	public final String name;
+	public final Class<?> clazz;
+	public final String column;
+	public final Nullable nullable;
+	public final ElementKind kind;
+	public final String type;
+	public final int index;
 
 	
 	protected SchemaElement(ElementKind kind, String name, Class<?> clazz, 
