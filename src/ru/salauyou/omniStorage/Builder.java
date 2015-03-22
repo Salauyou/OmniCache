@@ -6,6 +6,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import ru.salauyou.omniStorage.Schema.*;
 
@@ -90,7 +91,7 @@ public class Builder {
 		if (currentType == null)
 			throw new IllegalStateException("Entity type must be defined first");
 		if (name == null || name.isEmpty()) 
-			throw new IllegalArgumentException("Element name cannot be null or empty");
+			throw new IllegalArgumentException("Element name cannot be null neither empty");
 		if (currentNames.contains(name))
 			throw new IllegalArgumentException(String.format("Element {%s}.%s is already defined", currentType, name));
 		
@@ -104,7 +105,7 @@ public class Builder {
 		
 		case ENTITY:
 			if (type == null || type.isEmpty())
-				throw new IllegalArgumentException("Element type for an Entity type must be defined");
+				throw new IllegalArgumentException("Element type cannot be null neither empty");
 			break;
 		
 		case LIST:
@@ -122,6 +123,7 @@ public class Builder {
 			throw new IllegalStateException("Adapter cannot be null");
 		currentAdapter = adapter;
 		return this;	
+		// TODO: implement check of adapter correctness
 	}
 	
 	
@@ -137,7 +139,34 @@ public class Builder {
 			schema.add(new SchemaType(currentType, currentTypeList));
 			adapters.put(currentType, currentAdapter);
 		}
+		try {
+			validateEntityTypes();
+		} catch (RuntimeException e) {
+			schema.remove(schema.size() - 1);
+			adapters.remove(currentType);
+			throw e;
+		}
 		isBuilt = true;
 		return new OmniStorage(schema, adapters);
 	}
+	
+	
+	
+	/** 
+	 * Checks if all entity types are defined in schema 
+	 **/
+	private void validateEntityTypes() throws RuntimeException {
+		Set<String> types = schema.stream().map(SchemaType::getType).collect(Collectors.toSet());
+		schema.stream().forEach((st) -> {
+			for (SchemaElement e : st.elements) {
+				if (e.kind == ElementKind.ENTITY && !types.contains(e.type)) {
+					throw new IllegalStateException(
+							String.format("Type {%s} is not defined in schema", e.type)
+							);
+				}
+			}
+		});
+	}
+	
+	
 }

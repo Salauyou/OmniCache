@@ -45,6 +45,11 @@ public final class Schema {
 			return elements;
 		}
 		
+		
+		public String getType() {
+			return type;
+		}
+		
 
 		@Override
 		public String toString() {

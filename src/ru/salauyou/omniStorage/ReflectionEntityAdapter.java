@@ -8,8 +8,6 @@ import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import ru.salauyou.omniStorage.SchemaElement;
-
 public class ReflectionEntityAdapter implements EntityAdapter {
 
 	private final Map<String, Method> getters = new HashMap<>();
@@ -18,13 +16,11 @@ public class ReflectionEntityAdapter implements EntityAdapter {
 	private Constructor<? extends Entity> emptyConstructor = null;
 	private Constructor<? extends Entity> stringConstructor = null;
 	
-	private final static Pattern setterPattern 
-							= Pattern.compile("^set([A-Z][_A-Za-z0-9]+)$");
-	private final static Pattern getterPattern 
-							= Pattern.compile("^get([A-Z][_A-Za-z0-9]+)$");
+	private final static Pattern setterPattern = Pattern.compile("^set([A-Z][_A-Za-z0-9]*)$");
+	private final static Pattern getterPattern = Pattern.compile("^get([A-Z][_A-Za-z0-9]*)$");
 	
 	
-	
+
 	public ReflectionEntityAdapter(Class<? extends Entity> clazz) {
 		
 		Matcher matcher;
@@ -46,10 +42,10 @@ public class ReflectionEntityAdapter implements EntityAdapter {
 				stringConstructor.setAccessible(true);
 				stringConstructor.newInstance("test");
 				return;
-			} catch (Exception e1) {
+			} catch (ReflectiveOperationException e1) {
 				throw e1;
 			}
-		} catch (Exception ex) { 
+		} catch (ReflectiveOperationException ex) { 
 			stringConstructor = null;
 		}
 				
@@ -60,10 +56,10 @@ public class ReflectionEntityAdapter implements EntityAdapter {
 				try {
 					emptyConstructor.setAccessible(true);
 					emptyConstructor.newInstance();
-				} catch (Exception e1) {
+				} catch (ReflectiveOperationException e1) {
 					throw e1;
 				}
-			} catch (Exception ex) {
+			} catch (ReflectiveOperationException ex) {
 				emptyConstructor = null;
 			}
 		}
@@ -78,13 +74,10 @@ public class ReflectionEntityAdapter implements EntityAdapter {
 	
 	
 	private String lowerFirstChar(String input) {
-		StringBuilder sb = new StringBuilder(input);
-		char c = String.valueOf(sb.charAt(0)).toLowerCase(Locale.ROOT).toCharArray()[0];
-		sb.setCharAt(0, c);
-		return sb.toString();
+		return input.substring(0, 1).toLowerCase(Locale.ROOT) + input.substring(1);
 	}
 	
-	
+
 	
 	@Override
 	public Entity create(String type, String id) {
@@ -93,7 +86,7 @@ public class ReflectionEntityAdapter implements EntityAdapter {
 		if (stringConstructor != null) {
 			try {
 				e = stringConstructor.newInstance(id);
-			} catch (Exception ex) { 
+			} catch (ReflectiveOperationException ex) { 
 				e = null; 
 			}
 		} else {
@@ -102,7 +95,7 @@ public class ReflectionEntityAdapter implements EntityAdapter {
 				setters.get("id").setAccessible(true);
 				setters.get("id").invoke(id);
 				setters.get("id").setAccessible(false);
-			} catch (Exception ex) {
+			} catch (ReflectiveOperationException ex) {
 				e = null;
 			}
 		}
@@ -124,7 +117,7 @@ public class ReflectionEntityAdapter implements EntityAdapter {
 					getter.setAccessible(true);
 					b.set(se.name, getter.invoke(e));
 					getter.setAccessible(false);
-				} catch (Exception e1) {
+				} catch (ReflectiveOperationException e1) {
 					throw new IllegalStateException(String.format(
 							"Failed to get {%s}.%s element by reflection", b.schemaType.type, se.name
 							));
@@ -144,7 +137,7 @@ public class ReflectionEntityAdapter implements EntityAdapter {
 					setter.setAccessible(true);
 					setter.invoke(e, b.get(se.name));
 					setter.setAccessible(false);
-				} catch (Exception e1) {
+				} catch (ReflectiveOperationException e1) {
 					throw new IllegalStateException(String.format(
 							"Failed to set {%s}.%s element by reflection", b.schemaType.type, se.name
 							));

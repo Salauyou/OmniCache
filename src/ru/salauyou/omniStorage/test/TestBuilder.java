@@ -1,6 +1,8 @@
 package ru.salauyou.omniStorage.test;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 
 import org.junit.Test;
 
@@ -9,6 +11,7 @@ import ru.salauyou.omniStorage.Bundle;
 import ru.salauyou.omniStorage.Entity;
 import ru.salauyou.omniStorage.EntityAdapter;
 import ru.salauyou.omniStorage.OmniStorage;
+import ru.salauyou.omniStorage.Schema.ElementKind;
 import ru.salauyou.omniStorage.Schema.Nullable;
 
 public class TestBuilder {
@@ -41,7 +44,6 @@ public class TestBuilder {
 			@Override
 			public void fromBundle(Entity e, Bundle b) { }
 		};
-		
 	}
 	
 	/** end of inner class **/
@@ -144,21 +146,72 @@ public class TestBuilder {
 		assertEquals(1, s.getSchema().size());
 		assertEquals(3, s.getSchema().get(0).getElements().size());
 		assertEquals("scalar1", s.getSchema().get(0).getElements().get(0).name);
-		
+		assertEquals(ElementKind.SCALAR, s.getSchema().get(0).getElements().get(0).kind);
 	}
 	
 	
 	
 	@Test
 	public void testAddEntity() {
+		Builder b = OmniStorage.builder().addType("Type1");
+		try {
+			b.addEntity("", "Type1"); // empty name
+			fail();
+		} catch (RuntimeException e) {
+			assertTrue(e.getMessage().contains("empty"));
+		} 
+		try {
+			b.addEntity(null, "Type1"); // null name
+			fail();
+		} catch (RuntimeException e) {
+			assertTrue(e.getMessage().contains("null"));
+		}
+		try {
+			b.addEntity("type1", null); // null type
+			fail();
+		} catch (RuntimeException e) {
+			assertTrue(e.getMessage().contains("null"));
+		}
+		try {
+			b.addEntity("type1", ""); // empty type
+			fail();
+		} catch (RuntimeException e) {
+			assertTrue(e.getMessage().contains("empty"));
+		}
 		
+		b.defineAdapter(Type1.adapter);
+		
+		// try to add non-existing type and build schema
+		b.addEntity("type2", "Type2");
+		try {
+			b.build();
+			fail();
+		} catch (RuntimeException e) {
+			assertTrue(e.getMessage().contains("not defined"));
+		}
+		
+		b.addType("Type2")
+		 .addScalar("string1", String.class)
+		 .addScalar("string2", String.class)
+		 .addEntity("type1", "Type1")
+		 .defineAdapter(Type1.adapter);
+		
+		// after non-existing type is defined, build must go well
+		OmniStorage s = b.build();
+		assertEquals(2, s.getSchema().size());
+		assertEquals(1, s.getSchema().get(0).getElements().size());
+		assertEquals(3, s.getSchema().get(1).getElements().size());
+		assertEquals("type2", s.getSchema().get(0).getElements().get(0).name);
+		assertEquals("type1", s.getSchema().get(1).getElements().get(2).name);
+		assertEquals(ElementKind.ENTITY, s.getSchema().get(0).getElements().get(0).kind);
+		assertEquals(ElementKind.ENTITY, s.getSchema().get(1).getElements().get(2).kind);
 	}
 	
 	
 	
 	@Test
 	public void testDefineAdapter() {
-		
+		// TODO: correctness test after implementing `DefineAdapter()` more carefully
 	}
 	
 	
