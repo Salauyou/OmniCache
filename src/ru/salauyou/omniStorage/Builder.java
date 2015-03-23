@@ -1,15 +1,14 @@
 package ru.salauyou.omniStorage;
 
+import static java.util.stream.Collectors.*;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.stream.Collectors;
 
 import ru.salauyou.omniStorage.Schema.*;
-
 
 
 public class Builder {
@@ -156,7 +155,7 @@ public class Builder {
 	 * Checks if all entity types are defined in schema 
 	 **/
 	private void validateEntityTypes() throws RuntimeException {
-		Set<String> types = schema.stream().map(SchemaType::getType).collect(Collectors.toSet());
+		Set<String> types = schema.stream().map((st) -> st.type).collect(toSet());
 		schema.stream().forEach((st) -> {
 			for (SchemaElement e : st.elements) {
 				if (e.kind == ElementKind.ENTITY && !types.contains(e.type)) {

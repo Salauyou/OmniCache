@@ -1,8 +1,12 @@
 package ru.salauyou.omniStorage.test;
 
+import static java.util.Arrays.asList;
+import static java.util.stream.Collectors.toList;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
+
+import java.util.List;
 
 import org.junit.Test;
 
@@ -13,6 +17,7 @@ import ru.salauyou.omniStorage.EntityAdapter;
 import ru.salauyou.omniStorage.OmniStorage;
 import ru.salauyou.omniStorage.Schema.ElementKind;
 import ru.salauyou.omniStorage.Schema.Nullable;
+import ru.salauyou.omniStorage.SchemaElement;
 
 public class TestBuilder {
 
@@ -211,7 +216,7 @@ public class TestBuilder {
 	
 	@Test
 	public void testDefineAdapter() {
-		// TODO: correctness test after implementing `DefineAdapter()` more carefully
+		// TODO: add test after implementing `DefineAdapter()` more carefully
 	}
 	
 	
@@ -231,6 +236,17 @@ public class TestBuilder {
 		} catch (RuntimeException e) {
 			assertTrue(e.getMessage().contains("built"));
 		}
+		
+		assertEquals(1, s.getSchema().size());
+		assertEquals("Type1", s.getSchema().get(0).type);
+		
+		List<SchemaElement> es = s.getSchema().get(0).getElements();
+		List<String> names = es.stream().map((e) -> e.name).collect(toList());
+		List<Class<?>> classes = es.stream().map((e) -> e.clazz).collect(toList());
+		List<Nullable> nullables = es.stream().map((e) -> e.nullable).collect(toList());
+		assertEquals(asList("string", "integer", "double"), names);
+		assertEquals(asList(String.class, Integer.class, Double.class), classes);
+		assertEquals(asList(Nullable.YES, Nullable.YES, Nullable.NO), nullables);
 	}
 
 }

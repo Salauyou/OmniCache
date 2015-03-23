@@ -28,7 +28,7 @@ public final class Schema {
 		
 		protected final Map<String, SchemaElement> elementMap;
 		protected final List<SchemaElement> elements;
-		protected final String type;
+		public final String type;
 		
 		protected SchemaType(String type, List<SchemaElement> elements) {
 			this.type = type;
@@ -46,11 +46,7 @@ public final class Schema {
 		}
 		
 		
-		public String getType() {
-			return type;
-		}
 		
-
 		@Override
 		public String toString() {
 			StringBuilder sb = new StringBuilder();
