@@ -14,9 +14,8 @@ import model.City;
 import org.apache.log4j.Logger;
 
 import ru.salauyou.omniStorage.OmniStorage;
-import ru.salauyou.omniStorage.ReflectionEntityAdapter;
-import test.TestHelper;
 import ru.salauyou.omniStorage.Schema.Nullable;
+import test.TestHelper;
 
 public class App {
 
@@ -36,13 +35,13 @@ public class App {
 				.addEntity("mother", Citizen.TYPE)
 				.addEntity("father", Citizen.TYPE)
 				.addEntity("birthPlace", City.TYPE, Nullable.NO)
-				.defineAdapter(new ReflectionEntityAdapter(Citizen.class))
+				.defineAdapter(Citizen.adapter)
 				
 			.addType(City.TYPE)
 				.addScalar("name", String.class, Nullable.NO)
 				.addScalar("lat", Double.class)
 				.addScalar("lon", Double.class)
-				.defineAdapter(new ReflectionEntityAdapter(City.class))
+				.defineAdapter(City.adapter)
 				
 			.build();
 		
