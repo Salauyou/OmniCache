@@ -6,7 +6,6 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
-import java.util.UUID;
 
 import model.Citizen;
 import model.City;
@@ -28,7 +27,7 @@ public class App {
 		long timeStart = System.nanoTime();
 
 		OmniStorage storage = OmniStorage.builder()
-			.addType(Citizen.TYPE)
+			.addType(Citizen.TYPE, Integer.class)
 				.addScalar("name", String.class, Nullable.NO)
 				.addScalar("surname", String.class, Nullable.NO)
 				.addScalar("birthDate", LocalDate.class, Nullable.NO)
@@ -37,7 +36,7 @@ public class App {
 				.addEntity("birthPlace", City.TYPE, Nullable.NO)
 				.defineAdapter(Citizen.adapter)
 				
-			.addType(City.TYPE)
+			.addType(City.TYPE, String.class)
 				.addScalar("name", String.class, Nullable.NO)
 				.addScalar("lat", Double.class)
 				.addScalar("lon", Double.class)
@@ -52,8 +51,8 @@ public class App {
 		City moscow = new City("ru-moscow", "Москва", 55d, 37.5d);
 		City yaroslavl = new City("ru-yaroslavl", "Ярославль", 56d, 38d);
 		
-		Citizen mom = new Citizen("mom", "Людмила", "Соловьева", LocalDate.parse("1953-10-19", df), grodno);
-		Citizen dad = new Citizen("dad", "Николай", "Соловьев", LocalDate.parse("1949-03-14", df), yaroslavl);
+		Citizen mom = new Citizen(-1, "Людмила", "Соловьева", LocalDate.parse("1953-10-19", df), grodno);
+		Citizen dad = new Citizen(-2, "Николай", "Соловьев", LocalDate.parse("1949-03-14", df), yaroslavl);
 		
 		mom.setMom(mom).setDad(dad);
 		
@@ -72,11 +71,11 @@ public class App {
 		log.info("Storage:  " + storage.getById(City.TYPE, "by-grodno"));
 		log.info("Storage:  " + storage.getById(City.TYPE, "ru-moscow"));
 		log.info("Storage:  " + storage.getById(City.TYPE, "ru-yaroslavl"));
-		log.info("Storage:  " + storage.getById(Citizen.TYPE, "mom"));
+		log.info("Storage:  " + storage.getById(Citizen.TYPE, -1));
 		
 		log.info("Started");
 		int count = 1000_000;
-		List<String> ids = new ArrayList<String>();
+		List<Integer> ids = new ArrayList<Integer>();
 		List<String> names = new ArrayList<String>();
 		List<String> surnames = new ArrayList<String>();
 		List<LocalDate> birthDates = new ArrayList<LocalDate>();
@@ -84,10 +83,10 @@ public class App {
 		log.info("Generating samples...");
 		Random rnd = new Random();
 		for (int i = 0; i < count; i++) {
-			ids.add(Long.toHexString(UUID.randomUUID().getLeastSignificantBits()));
+			ids.add(i);
 			names.add(TestHelper.generateName(rnd, 1));
 			surnames.add(TestHelper.generateName(rnd, 1));
-			birthDates.add(LocalDate.now());
+			birthDates.add(LocalDate.of(rnd.nextInt(100) + 1900, rnd.nextInt(12) + 1, rnd.nextInt(28) + 1));
 		}
 		
 		Thread.sleep(5_000);
@@ -111,9 +110,9 @@ public class App {
 				} catch (Exception e) {
 					log.warn(e.getMessage());
 				}
-				//if (i % 200_000 == 0) {
-				//	log.info(c);
-				//}
+				if (i % 200_000 == 0) {
+					log.info(c);
+				}
 			}
 			log.info(count + " entities generated and saved in " + (System.currentTimeMillis() - timeStart) / 1000d + " s.");
 			
@@ -125,15 +124,15 @@ public class App {
 				if (c == null) {
 					log.warn("Null entity returned");
 				}
-				//if (i % 200_000 == 0) {
-				//	log.info(c);
-				//}
+				if (i % 200_000 == 0) {
+					log.info(c);
+				}
 			}
 			log.info(count + " entities loaded from storage in " + (System.currentTimeMillis() - timeStart) / 1000d + " s.\n\n");
 			
 			Thread.sleep(2000);
 		}
-		
+		System.gc();
 		Thread.sleep(1000 * 60 * 5); // 5 minutes
 		storage.clean();
 	}

@@ -4,9 +4,9 @@ import java.util.Objects;
 
 public abstract class AbstractEntity implements Entity {
 	
-	protected String id = null;
+	protected Object id = null;
 	
-	protected void setId(String id) {
+	protected void setId(Object id) {
 		this.id = id;
 	}
 	
@@ -16,7 +16,7 @@ public abstract class AbstractEntity implements Entity {
 
 	
 	@Override
-	final public String getId() {
+	final public Object getId() {
 		return id;
 	}
 	
@@ -40,7 +40,7 @@ public abstract class AbstractEntity implements Entity {
 			
 		Entity e = (Entity) o;
 		if (e.getType() == null || e.getType().equals("") || getType() == null || getType().equals("") 
-		   || e.getId() == null || e.getId().equals("")   || getId() == null   || id.equals(""))
+		   || e.getId() == null || getId() == null   || id.equals(""))
 			return false;
 			
 		return getType().equals(e.getType()) && getId().equals(e.getId());

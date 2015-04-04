@@ -83,8 +83,8 @@ public class City implements Entity {
 	static public EntityAdapter adapter = new EntityAdapter(){
 
 		@Override
-		public Entity create(String type, String id) {
-			return new City(id);
+		public Entity create(String type, Object id) {
+			return new City((String)id);
 		}
 		
 		@Override

@@ -13,7 +13,7 @@ public class Citizen implements Entity {
 	
 	private static DateTimeFormatter df = DateTimeFormatter.ofPattern("yyyy-MM-dd");
 	
-	private final String id;
+	private final Integer id;
 	private String name;
 	private String surname;
 	private LocalDate birthDate;
@@ -29,12 +29,12 @@ public class Citizen implements Entity {
 	
 	
 	@Override
-	public String getId() {
+	public Integer getId() {
 		return id;
 	}
 	
 	
-	public Citizen(String id, String name, String surname, LocalDate birthDate, City birthPlace) {
+	public Citizen(Integer id, String name, String surname, LocalDate birthDate, City birthPlace) {
 		this.id = id;
 		this.name = name;
 		this.surname = surname;
@@ -43,9 +43,9 @@ public class Citizen implements Entity {
 	}
 	
 	
-	private Citizen(String id) { 
+	private Citizen(Integer id) { 
 		this.id = id;
-	};
+	}
 
 
 	public Citizen setMom(Citizen mother) {
@@ -78,8 +78,8 @@ public class Citizen implements Entity {
 	static public EntityAdapter adapter = new EntityAdapter(){
 
 		@Override
-		public Entity create(String type, String id) {
-			return new Citizen(id);
+		public Entity create(String type, Object id) {
+			return new Citizen((Integer)id);
 		}
 		
 		@Override

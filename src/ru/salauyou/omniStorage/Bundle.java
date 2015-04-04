@@ -2,6 +2,7 @@ package ru.salauyou.omniStorage;
 
 import ru.salauyou.omniStorage.OmniStorage.EntityKey;
 import ru.salauyou.omniStorage.Schema.Nullable;
+import ru.salauyou.omniStorage.Schema.SchemaElement;
 import ru.salauyou.omniStorage.Schema.SchemaType;
 
 public final class Bundle {
@@ -12,7 +13,7 @@ public final class Bundle {
 	
 
 		
-	public Bundle(String type, String id, SchemaType schemaType) {
+	public Bundle(String type, Object id, SchemaType schemaType) {
 		this.entityKey = new EntityKey(type, id);
 		this.schemaType = schemaType;
 		this.elements = new Object[schemaType.elements.size()];

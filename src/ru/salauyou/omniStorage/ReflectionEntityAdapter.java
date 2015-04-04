@@ -8,20 +8,41 @@ import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import ru.salauyou.omniStorage.Schema.SchemaElement;
+
 public class ReflectionEntityAdapter implements EntityAdapter {
 
 	private final Map<String, Method> getters = new HashMap<>();
 	private final Map<String, Method> setters = new HashMap<>();
 	
 	private Constructor<? extends Entity> emptyConstructor = null;
-	private Constructor<? extends Entity> stringConstructor = null;
+	private Constructor<? extends Entity> idConstructor = null;
 	
 	private final static Pattern setterPattern = Pattern.compile("^set([A-Z][_A-Za-z0-9]*)$");
 	private final static Pattern getterPattern = Pattern.compile("^get([A-Z][_A-Za-z0-9]*)$");
 	
 	
-
+	
+	/**
+	 * Reflection adapter that uses no-arg constructor and setId() method to create 
+	 * an entity instance with given id
+	 * 
+	 * @param clazz		entity class
+	 */
 	public ReflectionEntityAdapter(Class<? extends Entity> clazz) {
+		this(clazz, null);
+	}
+
+	
+	
+	/**
+	 * Reflection adapter that uses 1-argument constructor to create an entity instance
+	 * with given id
+	 * 
+	 * @param clazz		entity class
+	 * @param idClass	class of entity id
+	 */
+	public ReflectionEntityAdapter(Class<? extends Entity> clazz, Class<?> idClass) {
 		
 		Matcher matcher;
 		for (Method m : clazz.getDeclaredMethods()) {
@@ -35,22 +56,18 @@ public class ReflectionEntityAdapter implements EntityAdapter {
 			}
 		}
 		
-		// try to resolve constructor with String parameter
-		try {
-			stringConstructor = clazz.getDeclaredConstructor(String.class);
+		// try to resolve constructor with id parameter
+		if (idClass != null) {
 			try {
-				stringConstructor.setAccessible(true);
-				stringConstructor.newInstance("test");
-				return;
-			} catch (ReflectiveOperationException e1) {
-				throw e1;
+				idConstructor = clazz.getDeclaredConstructor(idClass);
+				idConstructor.setAccessible(true);
+			} catch (NoSuchMethodException e) { 
+				idConstructor = null;
 			}
-		} catch (ReflectiveOperationException ex) { 
-			stringConstructor = null;
 		}
 				
 		// try to resolve default empty constructor
-		if (stringConstructor == null) {
+		if (idConstructor == null) {
 			try {
 				emptyConstructor = clazz.getDeclaredConstructor();
 				try {
@@ -64,7 +81,7 @@ public class ReflectionEntityAdapter implements EntityAdapter {
 			}
 		}
 		
-		if (stringConstructor == null && emptyConstructor == null)
+		if (idConstructor == null && emptyConstructor == null)
 			throw new IllegalStateException(String.format(
 					"Cannot find suitable constructor for class %s", clazz.getSimpleName()
 					));
@@ -80,12 +97,12 @@ public class ReflectionEntityAdapter implements EntityAdapter {
 
 	
 	@Override
-	public Entity create(String type, String id) {
+	public Entity create(String type, Object id) {
 		Entity e = null;
 		
-		if (stringConstructor != null) {
+		if (idConstructor != null) {
 			try {
-				e = stringConstructor.newInstance(id);
+				e = idConstructor.newInstance(id);
 			} catch (ReflectiveOperationException ex) { 
 				e = null; 
 			}

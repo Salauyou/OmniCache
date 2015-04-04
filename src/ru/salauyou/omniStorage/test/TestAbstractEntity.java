@@ -14,7 +14,7 @@ public class TestAbstractEntity {
 	static class EntityOne extends AbstractEntity {
 
 		@Override
-		public void setId(String id) {
+		public void setId(Object id) {
 			this.id = id;
 		}
 		
@@ -51,7 +51,7 @@ public class TestAbstractEntity {
 		}
 		
 		@Override
-		public void setId(String id) {
+		public void setId(Object id) {
 			this.id = id;
 		}
 		

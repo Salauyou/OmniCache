@@ -1,6 +1,7 @@
 package ru.salauyou.omniStorage;
 
 import ru.salauyou.omniStorage.Schema.Nullable;
+import ru.salauyou.omniStorage.Schema.SchemaElement;
 import ru.salauyou.omniStorage.Schema.SchemaType;
 
 final class Tuple {
@@ -30,7 +31,7 @@ final class Tuple {
 			if (v != null) {
 				switch (se.kind) {
 				case SCALAR:
-					if (se.clazz.isAssignableFrom(v.getClass()) == false)
+					if (!se.clazz.isAssignableFrom(v.getClass()))
 						throw new IllegalArgumentException(String.format(
 								"Element {%s}.%s must be of class %s", st.type, se.name, se.clazz.getSimpleName()
 								));
@@ -38,16 +39,16 @@ final class Tuple {
 					break;
 	
 				case ENTITY:
-					if (v instanceof Entity == false)
+					if (!(v instanceof Entity))
 						throw new IllegalArgumentException(String.format(
 								"Element {%s}.%s must be Entity{%s}, not %s", st.type, se.name, se.type, v.getClass().getSimpleName()
 								));
 					Entity e = (Entity) v;
-					if (se.type.equals(e.getType()) == false)
+					if (!se.type.equals(e.getType()))
 						throw new IllegalArgumentException(String.format(
 								"Element {%s}.%s must be of type {%s}, not {%s}", st.type, se.name, se.type, e.getType()
 								));
-					OmniStorage.validateId(e.getId());
+					validateId(e.getId());
 					t.elements[se.index] = e.getId();
 					break;
 						
@@ -61,6 +62,12 @@ final class Tuple {
 	}
 	
 	
+	private static void validateId(Object id) {
+		if (id == null || id.equals("")) 
+			throw new IllegalArgumentException("Id cannot be null neither empty");
+		if (!Schema.ALLOWED_SCALAR_CLASSES.contains(id.getClass()))
+			throw new IllegalArgumentException(String.format("Id of class %s is not allowed", id.getClass().getSimpleName()));
+	}
 	
 	
 }

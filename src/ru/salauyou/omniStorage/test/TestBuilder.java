@@ -6,6 +6,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
+import java.sql.Date;
 import java.util.List;
 
 import org.junit.Test;
@@ -17,7 +18,7 @@ import ru.salauyou.omniStorage.EntityAdapter;
 import ru.salauyou.omniStorage.OmniStorage;
 import ru.salauyou.omniStorage.Schema.ElementKind;
 import ru.salauyou.omniStorage.Schema.Nullable;
-import ru.salauyou.omniStorage.SchemaElement;
+import ru.salauyou.omniStorage.Schema.SchemaElement;
 
 public class TestBuilder {
 
@@ -32,14 +33,14 @@ public class TestBuilder {
 		}
 
 		@Override
-		public String getId() {
+		public Object getId() {
 			return "0";
 		}
 		
 		static EntityAdapter adapter = new EntityAdapter() {
 
 			@Override
-			public Entity create(String type, String id) {
+			public Entity create(String type, Object id) {
 				return new Type1();
 			}
 
@@ -60,43 +61,55 @@ public class TestBuilder {
 	public void testAddType() {
 		Builder b = OmniStorage.builder();
 		try {
-			b.addType("");		// empty string
+			b.addType("", String.class);		// empty string
 			fail();
 		} catch (RuntimeException e) { 
 			assertTrue(e.getMessage().contains("null"));
 		}
 		try {
-			b.addType(null);	// null string
+			b.addType(null, String.class);	 // null string
 			fail();
 		} catch (RuntimeException e) { 
 			assertTrue(e.getMessage().contains("empty"));
 		}
-		b.addType("Type1");
 		try {
-			b.addType("Type2");		// elements not added
+			b.addType("Type1", null);		// null id class
+			fail();
+		} catch (RuntimeException e) {
+			assertTrue(e.getMessage().contains("null"));
+		}
+		try {
+			b.addType("Type1", Date.class); 	// wrong id class
+			fail();
+		} catch (RuntimeException e) {
+			assertTrue(e.getMessage().contains("not allowed"));
+		}
+		b.addType("Type1", String.class);
+		try {
+			b.addType("Type2", String.class);		// elements not added
 			fail();
 		} catch (RuntimeException e) { 
 			assertTrue(e.getMessage().contains("must contain"));
 		}
 		
 		// new builder
-		b = OmniStorage.builder().addType("Type1").addScalar("scalar1", String.class);
+		b = OmniStorage.builder().addType("Type1", String.class).addScalar("scalar1", String.class);
 		try {
-			b.addType("Type2");		// adapter not defined
+			b.addType("Type2", String.class);		// adapter not defined
 			fail();
 		} catch (RuntimeException e) {
 			assertTrue(e.getMessage().contains("adapter"));
 		}
 		b.defineAdapter(Type1.adapter);
 		try {
-			b.addType("Type1");		// existing type
+			b.addType("Type1", String.class);		// existing type
 			fail();
 		} catch (RuntimeException e) {
 			assertTrue(e.getMessage().contains("already defined"));
 		}
-		b.addType("Type2");
+		b.addType("Type2", String.class);
 		try {
-			b.addType("Type3");		// elements not added
+			b.addType("Type3", String.class);		// elements not added
 			fail();
 		} catch (RuntimeException e) {
 			assertTrue(e.getMessage().contains("must contain"));
@@ -108,7 +121,7 @@ public class TestBuilder {
 	
 	@Test
 	public void testAddScalar() {
-		Builder b = OmniStorage.builder().addType("Type1");
+		Builder b = OmniStorage.builder().addType("Type1", String.class);
 		try {
 			b.addScalar(null, String.class);  // null element name
 			fail();
@@ -128,14 +141,14 @@ public class TestBuilder {
 			assertTrue(e.getMessage().contains("null"));
 		}
 		try {
-			b.addScalar("scalar1", Type1.class);  // entity class in addScalar
+			b.addScalar("scalar1", Date.class);
 			fail();
 		} catch (RuntimeException e) {
-			assertTrue(e.getMessage().contains("Entity"));  
+			assertTrue(e.getMessage().contains("not allowed"));
 		}
 		
 		// new builder
-		b = OmniStorage.builder().addType("Type1");
+		b = OmniStorage.builder().addType("Type1", String.class);
 		b.addScalar("scalar1", String.class);
 		try {
 			b.addScalar("scalar1", String.class);  // same element name
@@ -158,7 +171,7 @@ public class TestBuilder {
 	
 	@Test
 	public void testAddEntity() {
-		Builder b = OmniStorage.builder().addType("Type1");
+		Builder b = OmniStorage.builder().addType("Type1", String.class);
 		try {
 			b.addEntity("", "Type1"); // empty name
 			fail();
@@ -195,7 +208,7 @@ public class TestBuilder {
 			assertTrue(e.getMessage().contains("not defined"));
 		}
 		
-		b.addType("Type2")
+		b.addType("Type2", String.class)
 		 .addScalar("string1", String.class)
 		 .addScalar("string2", String.class)
 		 .addEntity("type1", "Type1")
@@ -223,7 +236,7 @@ public class TestBuilder {
 	
 	@Test
 	public void testBuild() {
-		Builder b = OmniStorage.builder().addType("Type1")
+		Builder b = OmniStorage.builder().addType("Type1", String.class)
 						.addScalar("string", String.class)
 						.addScalar("integer", Integer.class, Nullable.YES)
 						.addScalar("double", Double.class, Nullable.NO)
@@ -239,6 +252,7 @@ public class TestBuilder {
 		
 		assertEquals(1, s.getSchema().size());
 		assertEquals("Type1", s.getSchema().get(0).type);
+		assertEquals(String.class, s.getSchema().get(0).idClass);
 		
 		List<SchemaElement> es = s.getSchema().get(0).getElements();
 		List<String> names = es.stream().map((e) -> e.name).collect(toList());

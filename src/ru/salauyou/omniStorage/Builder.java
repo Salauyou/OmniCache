@@ -21,31 +21,40 @@ public class Builder {
 	private EntityAdapter currentAdapter = null;
 	private Map<String, EntityAdapter> adapters = new HashMap<>();
 	private int currentIndex = 0;
+	private Class<?> currentIdClass = null;
 	private boolean isBuilt = false;
 	
 	// no instatiation outside the package
 	protected Builder(){};
 	
 	
-	public Builder addType(String type) throws IllegalStateException, IllegalArgumentException {
+	public Builder addType(String type, Class<?> idClass) throws IllegalStateException, IllegalArgumentException {
 		if (currentType != null) {
 			if (currentTypeList.size() == 0)
 				throw new IllegalStateException("Type must contain at least one element");
 			if (currentAdapter == null)
 				throw new IllegalStateException("Must define Entity adapter to add type to schema");
 			
-			schema.add(new SchemaType(currentType, currentTypeList));
+			schema.add(new SchemaType(currentType, currentIdClass, currentTypeList));
 			adapters.put(currentType, currentAdapter);
 			schemaTypes.add(currentType);
 			currentType = null;
 			currentAdapter = null;
 			currentIndex = 0;
+			currentIdClass = null;
 		}
 		if (type == null || type.isEmpty())
 			throw new IllegalArgumentException("Type cannot be null neither empty");
+		if (idClass == null)
+			throw new IllegalArgumentException("Id class cannot be null");
+		if (!Schema.ALLOWED_SCALAR_CLASSES.contains(idClass)) 
+			throw new IllegalArgumentException(String.format(
+					"Class %s provided for Entity{%s}.id is not allowed scalar type", idClass.getSimpleName(), type
+					));
 		if (schemaTypes.contains(type))
 			throw new IllegalArgumentException(String.format("Entity{%s} is already defined in schema", type));
 
+		currentIdClass = idClass;
 		currentType = type;
 		currentTypeList.clear();
 		currentNames.clear();
@@ -98,8 +107,10 @@ public class Builder {
 		case SCALAR:
 			if (clazz == null)
 				throw new IllegalArgumentException("Element class cannot be null");
-			if (Entity.class.isAssignableFrom(clazz))
-				throw new IllegalArgumentException(String.format("Class %s is an Entity class", clazz.getSimpleName()));
+			if (!Schema.ALLOWED_SCALAR_CLASSES.contains(clazz)) 
+				throw new IllegalArgumentException(String.format(
+						"Class %s provided for {%s}.%s is not allowed as a scalar element type", clazz.getSimpleName(), currentType, name
+						));
 			break;
 		
 		case ENTITY:
@@ -135,7 +146,7 @@ public class Builder {
 				throw new IllegalStateException("Type must contain at least one element");
 			if (currentAdapter == null)
 				throw new IllegalStateException("Must define Entity Adapter to add type to schema");
-			schema.add(new SchemaType(currentType, currentTypeList));
+			schema.add(new SchemaType(currentType, currentIdClass, currentTypeList));
 			adapters.put(currentType, currentAdapter);
 		}
 		try {

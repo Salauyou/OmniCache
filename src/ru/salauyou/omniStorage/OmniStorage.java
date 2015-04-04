@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
+import ru.salauyou.omniStorage.Schema.SchemaElement;
 import ru.salauyou.omniStorage.Schema.SchemaType;
 
 public final class OmniStorage {
@@ -14,7 +15,7 @@ public final class OmniStorage {
 	private final Map<String, SchemaType> schema;
 	private final List<SchemaType> schemaTypes;
 	private final Map<String, EntityAdapter> adapters;
-	private final Map<String, Map<String, Tuple>> storage = new HashMap<>();
+	private final Map<String, Map<Object, Tuple>> storage = new HashMap<>();
 	
 
 	/** -------------------------------------------------- */
@@ -23,9 +24,9 @@ public final class OmniStorage {
 	protected static final class EntityKey {
 	
 		protected final String type;
-		protected final String id;
+		protected final Object id;
 		
-		protected EntityKey(String type, String id) {
+		protected EntityKey(String type, Object id) {
 			this.type = type;
 			this.id = id;
 		}
@@ -80,14 +81,16 @@ public final class OmniStorage {
 	public OmniStorage save(Entity e) throws IllegalArgumentException {
 		
 		String type = e.getType();
-		String id = e.getId();
 		validateType(type);
-		validateId(id);
+		SchemaType t = schema.get(type);
+		
+		Object id = e.getId();
+		validateId(t, id);
 		
 		if (storage.get(type).containsKey(id))
 			throw new IllegalStateException(String.format("Storage already contains Entity{%s}[%s]", type, id));
 		
-		Bundle b = new Bundle(type, id, schema.get(type));
+		Bundle b = new Bundle(type, id, t);
 		adapters.get(type).toBundle(e, b);
 		storage.get(type).put(id, Tuple.fromBundle(b));
 		return this;
@@ -99,10 +102,11 @@ public final class OmniStorage {
 	 * Returns an entity of given type with given id,
 	 * or null if such entity cannot be found in the storage 
 	 */
-	public Entity getById(String type, String id) {
+	public Entity getById(String type, Object id) {
 		
 		validateType(type);
-		validateId(id);
+		SchemaType t = schema.get(type);
+		validateId(t, id);
 	
 		if (storage.get(type).containsKey(id) == false)
 			return null;
@@ -130,7 +134,7 @@ public final class OmniStorage {
 			switch (se.kind) {
 			case ENTITY:
 				String eType = se.type;
-				String eId = (String) t.elements[se.index];
+				Object eId = t.elements[se.index];
 				if (eId == null) {
 					b.elements[se.index] = null;
 				} else {
@@ -160,7 +164,11 @@ public final class OmniStorage {
 	
 	
 
-	static protected void validateId(String id) {
+	static protected void validateId(SchemaType type, Object id) {
+		if (type != null && !id.getClass().equals(type.idClass)) 
+			throw new IllegalArgumentException(String.format(
+					"Entity{%s}.id must be of class %s", type.type, type.idClass.getSimpleName()
+					));
 		if (id == null || id.equals(""))
 			throw new IllegalArgumentException("Id cannot be null neither empty");
 	}
@@ -176,7 +184,7 @@ public final class OmniStorage {
 	
 	
 	
-	static protected void validateNewEntity(Entity e, String type, String id) {
+	static protected void validateNewEntity(Entity e, String type, Object id) {
 		if (e == null) 
 			throw new IllegalStateException(String.format(
 					"Adapter returned null for Entity{%s}", type
