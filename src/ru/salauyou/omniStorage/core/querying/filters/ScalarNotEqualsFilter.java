@@ -1,13 +1,14 @@
 package ru.salauyou.omnistorage.core.querying.filters;
 
-import ru.salauyou.omnistorage.core.classes.Tuple;
+import ru.salauyou.omnistorage.core.Tuple;
+
 
 public class ScalarNotEqualsFilter extends AbstractScalarFilter {
 
 	final private Object v;
 	
 	public ScalarNotEqualsFilter(Object value) {
-		v = value;
+		v = resolveValue(value);
 	}
 	
 	

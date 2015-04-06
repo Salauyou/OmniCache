@@ -8,7 +8,6 @@ import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import ru.salauyou.omnistorage.core.classes.Bundle;
 import ru.salauyou.omnistorage.core.classes.Entity;
 import ru.salauyou.omnistorage.core.classes.EntityAdapter;
 import ru.salauyou.omnistorage.core.classes.Schema.SchemaElement;

@@ -1,6 +1,7 @@
 package ru.salauyou.omnistorage.core.querying.filters;
 
-import ru.salauyou.omnistorage.core.classes.Tuple;
+import ru.salauyou.omnistorage.core.Tuple;
+
 
 public class ScalarNullFilter extends AbstractScalarFilter {
 

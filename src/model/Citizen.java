@@ -3,9 +3,10 @@ package model;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 
-import ru.salauyou.omnistorage.core.classes.Bundle;
+import ru.salauyou.omnistorage.core.Bundle;
 import ru.salauyou.omnistorage.core.classes.Entity;
 import ru.salauyou.omnistorage.core.classes.EntityAdapter;
+
 
 
 

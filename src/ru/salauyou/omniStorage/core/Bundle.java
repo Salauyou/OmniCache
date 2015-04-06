@@ -1,5 +1,7 @@
-package ru.salauyou.omnistorage.core.classes;
+package ru.salauyou.omnistorage.core;
 
+import ru.salauyou.omnistorage.core.classes.Entity;
+import ru.salauyou.omnistorage.core.classes.EntityKey;
 import ru.salauyou.omnistorage.core.classes.Schema.Nullable;
 import ru.salauyou.omnistorage.core.classes.Schema.SchemaElement;
 import ru.salauyou.omnistorage.core.classes.Schema.SchemaType;
@@ -9,7 +11,7 @@ import ru.salauyou.omnistorage.core.classes.Schema.SchemaType;
 
 public final class Bundle {
 
-	public final Object[] elements;
+	final Object[] elements;
 	final EntityKey entityKey;
 	public final SchemaType schemaType;
 	

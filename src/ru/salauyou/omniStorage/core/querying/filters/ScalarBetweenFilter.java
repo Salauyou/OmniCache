@@ -1,6 +1,7 @@
 package ru.salauyou.omnistorage.core.querying.filters;
 
-import ru.salauyou.omnistorage.core.classes.Tuple;
+import ru.salauyou.omnistorage.core.Tuple;
+
 
 public class ScalarBetweenFilter extends AbstractScalarFilter {
 
@@ -8,9 +9,10 @@ public class ScalarBetweenFilter extends AbstractScalarFilter {
 	final private Comparable<Object> vMax;
 	
 	
+	@SuppressWarnings("unchecked")
 	public ScalarBetweenFilter(Comparable<Object> valueMin, Comparable<Object> valueMax) {
-		vMin = valueMin;
-		vMax = valueMax;
+		vMin = (Comparable<Object>) resolveValue(valueMin);
+		vMax = (Comparable<Object>) resolveValue(valueMax);
 	}
 	
 	

@@ -12,14 +12,13 @@ import java.util.List;
 import org.junit.Test;
 
 import ru.salauyou.omnistorage.core.Builder;
+import ru.salauyou.omnistorage.core.Bundle;
 import ru.salauyou.omnistorage.core.OmniStorage;
-import ru.salauyou.omnistorage.core.classes.Bundle;
 import ru.salauyou.omnistorage.core.classes.Entity;
 import ru.salauyou.omnistorage.core.classes.EntityAdapter;
 import ru.salauyou.omnistorage.core.classes.Schema.ElementKind;
 import ru.salauyou.omnistorage.core.classes.Schema.Nullable;
 import ru.salauyou.omnistorage.core.classes.Schema.SchemaElement;
-
 
 
 public class TestBuilder {
@@ -51,6 +50,7 @@ public class TestBuilder {
 
 			@Override
 			public void fromBundle(Entity e, Bundle b) { }
+			
 		};
 	}
 	

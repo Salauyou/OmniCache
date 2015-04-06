@@ -1,5 +1,6 @@
 package ru.salauyou.omnistorage.core.classes;
 
+import ru.salauyou.omnistorage.core.Bundle;
 
 
 public interface EntityAdapter {

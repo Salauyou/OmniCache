@@ -1,5 +1,7 @@
-package ru.salauyou.omnistorage.core.classes;
+package ru.salauyou.omnistorage.core;
 
+import ru.salauyou.omnistorage.core.classes.Entity;
+import ru.salauyou.omnistorage.core.classes.Schema;
 import ru.salauyou.omnistorage.core.classes.Schema.Nullable;
 import ru.salauyou.omnistorage.core.classes.Schema.SchemaElement;
 import ru.salauyou.omnistorage.core.classes.Schema.SchemaType;

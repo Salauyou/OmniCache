@@ -6,9 +6,10 @@ import java.util.List;
 import java.util.Map;
 
 import ru.salauyou.omnistorage.core.OmniStorage;
+import ru.salauyou.omnistorage.core.Tuple;
 import ru.salauyou.omnistorage.core.classes.Schema.SchemaType;
-import ru.salauyou.omnistorage.core.classes.Tuple;
 import ru.salauyou.omnistorage.core.querying.Filter;
+
 
 public final class EntityFilter implements Filter {
 
