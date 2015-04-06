@@ -1,4 +1,4 @@
-package ru.salauyou.omniStorage;
+package ru.salauyou.omnistorage.core.classes;
 
 import java.util.Objects;
 

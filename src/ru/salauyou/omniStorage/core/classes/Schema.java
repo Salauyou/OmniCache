@@ -1,4 +1,4 @@
-package ru.salauyou.omniStorage;
+package ru.salauyou.omnistorage.core.classes;
 
 import static java.util.stream.Collectors.toSet;
 
@@ -51,12 +51,12 @@ public final class Schema {
 	
 	public static final class SchemaType {
 		
-		protected final Map<String, SchemaElement> elementMap;
-		protected final List<SchemaElement> elements;
+		public final Map<String, SchemaElement> elementMap;
+		public final List<SchemaElement> elements;
 		public final String type;
 		public final Class<?> idClass;
 		
-		protected SchemaType(String type, Class<?> idClass, List<SchemaElement> elements) {
+		public SchemaType(String type, Class<?> idClass, List<SchemaElement> elements) {
 			this.type = type;
 			this.elements = Collections.unmodifiableList(new ArrayList<>(elements));
 			this.idClass = idClass;
@@ -95,7 +95,7 @@ public final class Schema {
 		public final String type;
 		public final int index;
 
-		protected SchemaElement(ElementKind kind, String name, Class<?> clazz, 
+		public SchemaElement(ElementKind kind, String name, Class<?> clazz, 
 				                String type, String column, Nullable nullable, int index) {
 			this.kind = kind;
 			this.name = name;

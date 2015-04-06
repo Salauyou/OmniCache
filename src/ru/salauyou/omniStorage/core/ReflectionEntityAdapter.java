@@ -1,4 +1,4 @@
-package ru.salauyou.omniStorage;
+package ru.salauyou.omnistorage.core;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Method;
@@ -8,7 +8,12 @@ import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import ru.salauyou.omniStorage.Schema.SchemaElement;
+import ru.salauyou.omnistorage.core.classes.Bundle;
+import ru.salauyou.omnistorage.core.classes.Entity;
+import ru.salauyou.omnistorage.core.classes.EntityAdapter;
+import ru.salauyou.omnistorage.core.classes.Schema.SchemaElement;
+
+
 
 public class ReflectionEntityAdapter implements EntityAdapter {
 

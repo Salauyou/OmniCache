@@ -1,4 +1,4 @@
-package ru.salauyou.omniStorage.test;
+package ru.salauyou.omnistorage.test;
 
 import static java.util.Arrays.asList;
 import static java.util.stream.Collectors.toList;
@@ -11,14 +11,16 @@ import java.util.List;
 
 import org.junit.Test;
 
-import ru.salauyou.omniStorage.Builder;
-import ru.salauyou.omniStorage.Bundle;
-import ru.salauyou.omniStorage.Entity;
-import ru.salauyou.omniStorage.EntityAdapter;
-import ru.salauyou.omniStorage.OmniStorage;
-import ru.salauyou.omniStorage.Schema.ElementKind;
-import ru.salauyou.omniStorage.Schema.Nullable;
-import ru.salauyou.omniStorage.Schema.SchemaElement;
+import ru.salauyou.omnistorage.core.Builder;
+import ru.salauyou.omnistorage.core.OmniStorage;
+import ru.salauyou.omnistorage.core.classes.Bundle;
+import ru.salauyou.omnistorage.core.classes.Entity;
+import ru.salauyou.omnistorage.core.classes.EntityAdapter;
+import ru.salauyou.omnistorage.core.classes.Schema.ElementKind;
+import ru.salauyou.omnistorage.core.classes.Schema.Nullable;
+import ru.salauyou.omnistorage.core.classes.Schema.SchemaElement;
+
+
 
 public class TestBuilder {
 

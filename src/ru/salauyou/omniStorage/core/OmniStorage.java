@@ -1,14 +1,20 @@
-package ru.salauyou.omniStorage;
+package ru.salauyou.omnistorage.core;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
 
-import ru.salauyou.omniStorage.Schema.SchemaElement;
-import ru.salauyou.omniStorage.Schema.SchemaType;
+import ru.salauyou.omnistorage.core.classes.Bundle;
+import ru.salauyou.omnistorage.core.classes.Entity;
+import ru.salauyou.omnistorage.core.classes.EntityAdapter;
+import ru.salauyou.omnistorage.core.classes.EntityKey;
+import ru.salauyou.omnistorage.core.classes.Schema.SchemaElement;
+import ru.salauyou.omnistorage.core.classes.Schema.SchemaType;
+import ru.salauyou.omnistorage.core.classes.Tuple;
+
+
 
 public final class OmniStorage {
 	
@@ -18,35 +24,6 @@ public final class OmniStorage {
 	private final Map<String, Map<Object, Tuple>> storage = new HashMap<>();
 	
 
-	/** -------------------------------------------------- */
-	/** Helper inner class representing Entity type-key pair 
-	 */
-	protected static final class EntityKey {
-	
-		protected final String type;
-		protected final Object id;
-		
-		protected EntityKey(String type, Object id) {
-			this.type = type;
-			this.id = id;
-		}
-		
-		@Override final public int hashCode() {
-			return Objects.hashCode(id);
-		}
-		
-		@Override final public boolean equals(Object o) {
-			if (this == o) return true;
-			if (o == null || o instanceof EntityKey == false) return false;
-			EntityKey k = (EntityKey) o;
-			return (k.id != null && id != null && k.type != null && type != null 
-					&& k.id.equals(id) && k.type.equals(type));
-		}
-	}
-	/**  -------------------------------------------------------- */
-	
-	
-	
 
 	// no instantiation outside the package
 	protected OmniStorage(List<SchemaType> schema, Map<String, EntityAdapter> adapters) {
@@ -121,6 +98,15 @@ public final class OmniStorage {
 	
 	
 	
+	public Tuple getTuple(String type, Object id) {
+		validateType(type);
+		SchemaType t = schema.get(type);
+		validateId(t, id);
+		return storage.get(type).get(id);
+	}
+	
+	
+	
 	private void resolve(String type, Entity e, Map<EntityKey, Entity> c) {
 	
 		Tuple t = storage.get(type).get(e.getId());
@@ -134,7 +120,7 @@ public final class OmniStorage {
 			switch (se.kind) {
 			case ENTITY:
 				String eType = se.type;
-				Object eId = t.elements[se.index];
+				Object eId = t.getByIndex(se.index);
 				if (eId == null) {
 					b.elements[se.index] = null;
 				} else {
@@ -152,7 +138,7 @@ public final class OmniStorage {
 				break;
 					
 			case SCALAR:
-				b.set(se.name, t.elements[se.index]);
+				b.elements[se.index] = t.getByIndex(se.index);
 				break;
 					
 			case LIST:

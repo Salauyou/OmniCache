@@ -1,12 +1,15 @@
-package ru.salauyou.omniStorage;
+package ru.salauyou.omnistorage.core.classes;
 
-import ru.salauyou.omniStorage.Schema.Nullable;
-import ru.salauyou.omniStorage.Schema.SchemaElement;
-import ru.salauyou.omniStorage.Schema.SchemaType;
+import ru.salauyou.omnistorage.core.classes.Schema.Nullable;
+import ru.salauyou.omnistorage.core.classes.Schema.SchemaElement;
+import ru.salauyou.omnistorage.core.classes.Schema.SchemaType;
 
-final class Tuple {
+
+
+final public class Tuple {
 	
-	final protected Object[] elements;
+	
+	private final Object[] elements;
 
 	
 	// instantiation inside the class only
@@ -15,8 +18,13 @@ final class Tuple {
 	}
 	
 	
+	public Object getByIndex(int i) {
+		return elements[i];
+	}
 	
-	static protected Tuple fromBundle(Bundle b) {
+	
+	
+	public static Tuple fromBundle(Bundle b) {
 		
 		SchemaType st = b.schemaType;
 		Tuple t = new Tuple(st);
@@ -62,7 +70,7 @@ final class Tuple {
 	}
 	
 	
-	private static void validateId(Object id) {
+	static void validateId(Object id) {
 		if (id == null || id.equals("")) 
 			throw new IllegalArgumentException("Id cannot be null neither empty");
 		if (!Schema.ALLOWED_SCALAR_CLASSES.contains(id.getClass()))

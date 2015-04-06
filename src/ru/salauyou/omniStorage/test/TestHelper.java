@@ -1,4 +1,4 @@
-package test;
+package ru.salauyou.omnistorage.test;
 
 import java.math.BigDecimal;
 import java.util.Random;
@@ -61,11 +61,11 @@ public class TestHelper {
 	public static String generatePayeeType(Random rnd) {
 		switch (rnd.nextInt(6)) {
 		case 0:
-			return "тк";
+			return "О©╫О©╫";
 		case 1:
-			return "хо";
+			return "О©╫О©╫";
 		default:
-			return "чк";
+			return "О©╫О©╫";
 		}
 	}
 	

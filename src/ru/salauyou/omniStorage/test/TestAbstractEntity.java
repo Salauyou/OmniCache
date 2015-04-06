@@ -1,10 +1,11 @@
-package ru.salauyou.omniStorage.test;
+package ru.salauyou.omnistorage.test;
 
 import static org.junit.Assert.*;
 
 import org.junit.Test;
 
-import ru.salauyou.omniStorage.AbstractEntity;
+import ru.salauyou.omnistorage.core.classes.AbstractEntity;
+
 
 public class TestAbstractEntity {
 

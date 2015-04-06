@@ -12,9 +12,9 @@ import model.City;
 
 import org.apache.log4j.Logger;
 
-import ru.salauyou.omniStorage.OmniStorage;
-import ru.salauyou.omniStorage.Schema.Nullable;
-import test.TestHelper;
+import ru.salauyou.omnistorage.core.OmniStorage;
+import ru.salauyou.omnistorage.core.classes.Schema.Nullable;
+import ru.salauyou.omnistorage.test.TestHelper;
 
 public class App {
 

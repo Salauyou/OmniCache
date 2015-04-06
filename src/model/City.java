@@ -1,8 +1,11 @@
 package model;
 
-import ru.salauyou.omniStorage.Bundle;
-import ru.salauyou.omniStorage.Entity;
-import ru.salauyou.omniStorage.EntityAdapter;
+import ru.salauyou.omnistorage.core.classes.Bundle;
+import ru.salauyou.omnistorage.core.classes.Entity;
+import ru.salauyou.omnistorage.core.classes.EntityAdapter;
+import ru.salauyou.omnistorage.core.classes.Tuple;
+
+
 
 public class City implements Entity {
 

@@ -1,6 +1,7 @@
-package ru.salauyou.omniStorage;
+package ru.salauyou.omnistorage.core;
 
 import static java.util.stream.Collectors.*;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -8,7 +9,17 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import ru.salauyou.omniStorage.Schema.*;
+
+
+
+
+
+import ru.salauyou.omnistorage.core.classes.EntityAdapter;
+import ru.salauyou.omnistorage.core.classes.Schema;
+import ru.salauyou.omnistorage.core.classes.Schema.ElementKind;
+import ru.salauyou.omnistorage.core.classes.Schema.Nullable;
+import ru.salauyou.omnistorage.core.classes.Schema.SchemaElement;
+import ru.salauyou.omnistorage.core.classes.Schema.SchemaType;
 
 
 public class Builder {

@@ -1,15 +1,17 @@
-package ru.salauyou.omniStorage;
+package ru.salauyou.omnistorage.core.classes;
 
-import ru.salauyou.omniStorage.OmniStorage.EntityKey;
-import ru.salauyou.omniStorage.Schema.Nullable;
-import ru.salauyou.omniStorage.Schema.SchemaElement;
-import ru.salauyou.omniStorage.Schema.SchemaType;
+import ru.salauyou.omnistorage.core.classes.Schema.Nullable;
+import ru.salauyou.omnistorage.core.classes.Schema.SchemaElement;
+import ru.salauyou.omnistorage.core.classes.Schema.SchemaType;
+
+
+
 
 public final class Bundle {
 
-	protected final Object[] elements;
-	protected final EntityKey entityKey;
-	protected final SchemaType schemaType;
+	public final Object[] elements;
+	final EntityKey entityKey;
+	public final SchemaType schemaType;
 	
 
 		
