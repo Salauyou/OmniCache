@@ -1,9 +1,9 @@
 package ru.salauyou.omnistorage.core.classes;
 
-public interface Entity {
+public interface Entity<T> {
 	
 	public String getType();
 	
-	public Object getId();
+	public T getId();
 	
 }

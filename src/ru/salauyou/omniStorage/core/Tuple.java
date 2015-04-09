@@ -53,6 +53,7 @@ final public class Tuple {
 						throw new IllegalArgumentException(String.format(
 								"Element {%s}.%s must be Entity{%s}, not %s", st.type, se.name, se.type, v.getClass().getSimpleName()
 								));
+					@SuppressWarnings("rawtypes")
 					Entity e = (Entity) v;
 					if (!se.type.equals(e.getType()))
 						throw new IllegalArgumentException(String.format(

@@ -17,12 +17,14 @@ public final class OmniStorage {
 	
 	private final Map<String, SchemaType> schema;
 	private final List<SchemaType> schemaTypes;
+	@SuppressWarnings("rawtypes")
 	private final Map<String, EntityAdapter> adapters;
 	private final Map<String, Map<Object, Tuple>> storage = new HashMap<>();
 	
 
 
 	// no instantiation outside the package
+	@SuppressWarnings("rawtypes")
 	protected OmniStorage(List<SchemaType> schema, Map<String, EntityAdapter> adapters) {
 		Map<String, SchemaType> m = new HashMap<>();
 		for (SchemaType t : schema) {
@@ -52,7 +54,8 @@ public final class OmniStorage {
 	/**
 	 * Saves a given entity in the storage
 	 */
-	public OmniStorage save(Entity e) throws IllegalArgumentException {
+	@SuppressWarnings("unchecked")
+	public <T> OmniStorage save(Entity<T> e) throws IllegalArgumentException {
 		
 		String type = e.getType();
 		validateType(type);
@@ -75,8 +78,10 @@ public final class OmniStorage {
 	/**
 	 * Returns an entity of given type with given id,
 	 * or null if such entity cannot be found in the storage 
+	 * @param <T>
 	 */
-	public Entity getById(String type, Object id) {
+	@SuppressWarnings({ "rawtypes", "unchecked" })
+	public <T> Entity<T> getById(String type, T id) {
 		
 		validateType(type);
 		SchemaType t = schema.get(type);
@@ -85,7 +90,7 @@ public final class OmniStorage {
 		if (storage.get(type).containsKey(id) == false)
 			return null;
 		
-		Entity e = adapters.get(type).create(type, id);
+		Entity<T> e = adapters.get(type).create(type, id);
 		validateNewEntity(e, type, id);
 		Map<EntityKey, Entity> c = new HashMap<>();
 		c.put(new EntityKey(type, id), e);
@@ -95,7 +100,7 @@ public final class OmniStorage {
 	
 	
 	
-	public Tuple getTuple(String type, Object id) {
+	public <T> Tuple getTuple(String type, T id) {
 		validateType(type);
 		SchemaType t = schema.get(type);
 		validateId(t, id);
@@ -104,6 +109,7 @@ public final class OmniStorage {
 	
 	
 	
+	@SuppressWarnings({ "rawtypes", "unchecked" })
 	private void resolve(String type, Entity e, Map<EntityKey, Entity> c) {
 	
 		Tuple t = storage.get(type).get(e.getId());
@@ -167,7 +173,7 @@ public final class OmniStorage {
 	
 	
 	
-	static protected void validateNewEntity(Entity e, String type, Object id) {
+	static protected void validateNewEntity(Entity<? extends Object> e, String type, Object id) {
 		if (e == null) 
 			throw new IllegalStateException(String.format(
 					"Adapter returned null for Entity{%s}", type

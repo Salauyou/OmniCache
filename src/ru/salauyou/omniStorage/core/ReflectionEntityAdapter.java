@@ -1,7 +1,6 @@
 package ru.salauyou.omnistorage.core;
 
-import java.lang.reflect.Constructor;
-import java.lang.reflect.Method;
+import java.lang.reflect.*;
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
@@ -14,13 +13,13 @@ import ru.salauyou.omnistorage.core.classes.Schema.SchemaElement;
 
 
 
-public class ReflectionEntityAdapter implements EntityAdapter {
+public class ReflectionEntityAdapter<T> implements EntityAdapter<T> {
 
 	private final Map<String, Method> getters = new HashMap<>();
 	private final Map<String, Method> setters = new HashMap<>();
 	
-	private Constructor<? extends Entity> emptyConstructor = null;
-	private Constructor<? extends Entity> idConstructor = null;
+	private Constructor<? extends Entity<T>> emptyConstructor = null;
+	private Constructor<? extends Entity<T>> idConstructor = null;
 	
 	private final static Pattern setterPattern = Pattern.compile("^set([A-Z][_A-Za-z0-9]*)$");
 	private final static Pattern getterPattern = Pattern.compile("^get([A-Z][_A-Za-z0-9]*)$");
@@ -33,7 +32,7 @@ public class ReflectionEntityAdapter implements EntityAdapter {
 	 * 
 	 * @param clazz		entity class
 	 */
-	public ReflectionEntityAdapter(Class<? extends Entity> clazz) {
+	public ReflectionEntityAdapter(Class<? extends Entity<T>> clazz) {
 		this(clazz, null);
 	}
 
@@ -46,7 +45,7 @@ public class ReflectionEntityAdapter implements EntityAdapter {
 	 * @param clazz		entity class
 	 * @param idClass	class of entity id
 	 */
-	public ReflectionEntityAdapter(Class<? extends Entity> clazz, Class<?> idClass) {
+	public ReflectionEntityAdapter(Class<? extends Entity<T>> clazz, Class<T> idClass) {
 		
 		Matcher matcher;
 		for (Method m : clazz.getDeclaredMethods()) {
@@ -89,7 +88,6 @@ public class ReflectionEntityAdapter implements EntityAdapter {
 			throw new IllegalStateException(String.format(
 					"Cannot find suitable constructor for class %s", clazz.getSimpleName()
 					));
-		
 	}
 	
 	
@@ -101,8 +99,8 @@ public class ReflectionEntityAdapter implements EntityAdapter {
 
 	
 	@Override
-	public Entity create(String type, Object id) {
-		Entity e = null;
+	public Entity<T> create(String type, T id) {
+		Entity<T> e = null;
 		
 		if (idConstructor != null) {
 			try {
@@ -130,7 +128,7 @@ public class ReflectionEntityAdapter implements EntityAdapter {
 	
 	
 	@Override
-	public void toBundle(Entity e, Bundle b) {
+	public void toBundle(Entity<T> e, Bundle b) {
 		for (SchemaElement se : b.schemaType.elements) {
 			if (getters.containsKey(se.name)) {
 				Method getter = getters.get(se.name);
@@ -150,7 +148,7 @@ public class ReflectionEntityAdapter implements EntityAdapter {
 	
 	
 	@Override
-	public void fromBundle(Entity e, Bundle b) {
+	public void fromBundle(Entity<T> e, Bundle b) {
 		for (SchemaElement se : b.schemaType.elements) {
 			if (setters.containsKey(se.name)) {
 				Method setter = setters.get(se.name);

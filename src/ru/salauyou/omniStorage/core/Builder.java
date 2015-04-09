@@ -14,6 +14,10 @@ import java.util.Set;
 
 
 
+
+
+
+
 import ru.salauyou.omnistorage.core.classes.EntityAdapter;
 import ru.salauyou.omnistorage.core.classes.Schema;
 import ru.salauyou.omnistorage.core.classes.Schema.ElementKind;
@@ -29,7 +33,9 @@ public class Builder {
 	private List<SchemaElement> currentTypeList = new ArrayList<>();
 	private Set<String> currentNames = new HashSet<>();
 	private String currentType = null;
+	@SuppressWarnings("rawtypes")
 	private EntityAdapter currentAdapter = null;
+	@SuppressWarnings("rawtypes")
 	private Map<String, EntityAdapter> adapters = new HashMap<>();
 	private int currentIndex = 0;
 	private Class<?> currentIdClass = null;
@@ -139,7 +145,7 @@ public class Builder {
 	
 	
 	
-	public Builder defineAdapter(EntityAdapter adapter) throws IllegalStateException {
+	public <T> Builder defineAdapter(EntityAdapter<T> adapter) throws IllegalStateException {
 		if (adapter == null)
 			throw new IllegalStateException("Adapter cannot be null");
 		currentAdapter = adapter;

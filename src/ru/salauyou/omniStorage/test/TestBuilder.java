@@ -26,7 +26,7 @@ public class TestBuilder {
 	
 	/** inner class for entity type **/
 
-	static class Type1 implements Entity {
+	static class Type1 implements Entity<String> {
 
 		@Override
 		public String getType() {
@@ -34,22 +34,22 @@ public class TestBuilder {
 		}
 
 		@Override
-		public Object getId() {
+		public String getId() {
 			return "0";
 		}
 		
-		static EntityAdapter adapter = new EntityAdapter() {
+		static EntityAdapter<String> adapter = new EntityAdapter<String>() {
 
 			@Override
-			public Entity create(String type, Object id) {
+			public Entity<String> create(String type, String id) {
 				return new Type1();
 			}
 
 			@Override
-			public void toBundle(Entity e, Bundle b) { }
+			public void toBundle(Entity<String> e, Bundle b) { }
 
 			@Override
-			public void fromBundle(Entity e, Bundle b) { }
+			public void fromBundle(Entity<String> e, Bundle b) { }
 			
 		};
 	}

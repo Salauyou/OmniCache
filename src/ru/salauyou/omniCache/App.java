@@ -1,5 +1,6 @@
 package ru.salauyou.omniCache;
 
+import java.lang.reflect.ParameterizedType;
 import java.text.ParseException;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
@@ -13,6 +14,7 @@ import model.City;
 import org.apache.log4j.Logger;
 
 import ru.salauyou.omnistorage.core.OmniStorage;
+import ru.salauyou.omnistorage.core.ReflectionEntityAdapter;
 import ru.salauyou.omnistorage.core.classes.Schema.Nullable;
 import ru.salauyou.omnistorage.test.TestHelper;
 
@@ -40,12 +42,14 @@ public class App {
 				.addScalar("name", String.class, Nullable.NO)
 				.addScalar("lat", Double.class)
 				.addScalar("lon", Double.class)
-				.defineAdapter(City.adapter)
+				.defineAdapter(new ReflectionEntityAdapter<String>(City.class, String.class))
 				
 			.build();
 		
  		log.info("Executed in " + (System.nanoTime() - timeStart)/1000 + " μs.");
 		log.info(storage.printSchema());
+		
+		System.out.println(City.adapter.getClass().getGenericInterfaces()[0]);
 		
 		City grodno = new City("by-grodno", "Гродно", 25d, 37d);
 		City moscow = new City("ru-moscow", "Москва", 55d, 37.5d);

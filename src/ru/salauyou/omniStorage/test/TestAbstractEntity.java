@@ -12,10 +12,10 @@ public class TestAbstractEntity {
 	
 	/** test classes **/
 	
-	static class EntityOne extends AbstractEntity {
+	static class EntityOne extends AbstractEntity<String> {
 
 		@Override
-		public void setId(Object id) {
+		public void setId(String id) {
 			this.id = id;
 		}
 		
@@ -26,7 +26,7 @@ public class TestAbstractEntity {
 		
 	}
 	
-	static class EntityTwo extends AbstractEntity {
+	static class EntityTwo extends AbstractEntity<String> {
 
 		@Override
 		public String getType() {
@@ -40,7 +40,7 @@ public class TestAbstractEntity {
 	}
 	
 	// same as EntityTwo returned type but different class
-	static class Entity2 extends AbstractEntity {
+	static class Entity2 extends AbstractEntity<String> {
 
 		@Override
 		public String getType() {
@@ -52,7 +52,7 @@ public class TestAbstractEntity {
 		}
 		
 		@Override
-		public void setId(Object id) {
+		public void setId(String id) {
 			this.id = id;
 		}
 		

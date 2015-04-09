@@ -6,7 +6,7 @@ import ru.salauyou.omnistorage.core.classes.EntityAdapter;
 
 
 
-public class City implements Entity {
+public class City implements Entity<String> {
 
 	public static final String TYPE = "City";
 
@@ -82,15 +82,15 @@ public class City implements Entity {
 	 *  Adapter
 	 */
 	
-	static public EntityAdapter adapter = new EntityAdapter(){
+	static public EntityAdapter<String> adapter = new EntityAdapter<String>(){
 
 		@Override
-		public Entity create(String type, Object id) {
+		public Entity<String> create(String type, String id) {
 			return new City((String)id);
 		}
 		
 		@Override
-		public void toBundle(Entity e, Bundle b) {
+		public void toBundle(Entity<String> e, Bundle b) {
 			City c = (City) e;
 			b.set("name", c.name);
 			b.set("lat", c.lat);
@@ -98,7 +98,7 @@ public class City implements Entity {
 		}
 
 		@Override
-		public void fromBundle(Entity e, Bundle b) {
+		public void fromBundle(Entity<String> e, Bundle b) {
 			City c = (City) e;
 			c.name = (String) b.get("name");
 			c.lat = (Double) b.get("lat");

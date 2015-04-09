@@ -4,19 +4,20 @@ import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 
 import ru.salauyou.omnistorage.core.Bundle;
+import ru.salauyou.omnistorage.core.classes.AbstractEntity;
 import ru.salauyou.omnistorage.core.classes.Entity;
 import ru.salauyou.omnistorage.core.classes.EntityAdapter;
 
 
 
 
-public class Citizen implements Entity {
+public class Citizen extends AbstractEntity<Integer>  {
 	
 	static public final String TYPE = "Citizen";
 	
 	private static DateTimeFormatter df = DateTimeFormatter.ofPattern("yyyy-MM-dd");
 	
-	private final Integer id;
+	//private final Integer id;
 	private String name;
 	private String surname;
 	private LocalDate birthDate;
@@ -30,12 +31,12 @@ public class Citizen implements Entity {
 		return TYPE;
 	}
 	
-	
+	/*
 	@Override
 	public Integer getId() {
 		return id;
 	}
-	
+	*/
 	
 	public Citizen(Integer id, String name, String surname, LocalDate birthDate, City birthPlace) {
 		this.id = id;
@@ -78,15 +79,15 @@ public class Citizen implements Entity {
 	
 	//-------------- apapter -----------------
 	
-	static public EntityAdapter adapter = new EntityAdapter(){
+	static public EntityAdapter<Integer> adapter = new EntityAdapter<Integer>(){
 
 		@Override
-		public Entity create(String type, Object id) {
-			return new Citizen((Integer)id);
+		public Entity<Integer> create(String type, Integer id) {
+			return new Citizen(id);
 		}
 		
 		@Override
-		public void toBundle(Entity e, Bundle b) {
+		public void toBundle(Entity<Integer> e, Bundle b) {
 			Citizen c = (Citizen) e;
 			b.set("name", c.name);
 			b.set("surname", c.surname);
@@ -97,7 +98,7 @@ public class Citizen implements Entity {
 		}
 		
 		@Override
-		public void fromBundle(Entity e, Bundle b) {
+		public void fromBundle(Entity<Integer> e, Bundle b) {
 			Citizen c = (Citizen) e;
 			c.name = (String) b.get("name");
 			c.surname = (String) b.get("surname");
@@ -167,6 +168,9 @@ public class Citizen implements Entity {
 	private Citizen getFather() {
 		return this.father;
 	}
+
+
+	
 	
 
 }

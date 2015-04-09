@@ -52,7 +52,8 @@ public final class Bundle {
 					throw new IllegalArgumentException(String.format(
 							"Element {%s}.%s must be Entity{%s}, not %s", type, se.name, se.type, v.getClass().getSimpleName())
 							);
-				Entity e = (Entity) v;
+				@SuppressWarnings("unchecked")
+				Entity<Object> e = (Entity<Object>) v;
 				if (se.type.equals(e.getType()) == false)
 					throw new IllegalArgumentException(String.format(
 							"Element {%s}.%s must be of type {%s}, not {%s}", type, se.name, se.type, e.getType())

@@ -2,11 +2,11 @@ package ru.salauyou.omnistorage.core.classes;
 
 import java.util.Objects;
 
-public abstract class AbstractEntity implements Entity {
+public abstract class AbstractEntity<T> implements Entity<T> {
 	
-	protected Object id = null;
+	protected T id = null;
 	
-	protected void setId(Object id) {
+	protected void setId(T id) {
 		this.id = id;
 	}
 	
@@ -16,7 +16,7 @@ public abstract class AbstractEntity implements Entity {
 
 	
 	@Override
-	final public Object getId() {
+	final public T getId() {
 		return id;
 	}
 	
@@ -38,9 +38,10 @@ public abstract class AbstractEntity implements Entity {
 		if (this == o) return true;
 		if (o == null || o instanceof Entity == false) return false;
 			
-		Entity e = (Entity) o;
+		@SuppressWarnings("unchecked")
+		Entity<T> e = (Entity<T>) o;
 		if (e.getType() == null || e.getType().equals("") || getType() == null || getType().equals("") 
-		   || e.getId() == null || getId() == null   || id.equals(""))
+		   || e.getId() == null || getId() == null || id.equals(""))
 			return false;
 			
 		return getType().equals(e.getType()) && getId().equals(e.getId());
