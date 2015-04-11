@@ -22,7 +22,7 @@ public class ReflectionEntityAdapter<T> implements EntityAdapter<T> {
 	private Constructor<? extends Entity<T>> idConstructor = null;
 	
 	private final static Pattern setterPattern = Pattern.compile("^set([A-Z][_A-Za-z0-9]*)$");
-	private final static Pattern getterPattern = Pattern.compile("^get([A-Z][_A-Za-z0-9]*)$");
+	private final static Pattern getterPattern = Pattern.compile("^(?:get|is)([A-Z][_A-Za-z0-9]*)$");
 	
 	
 	
